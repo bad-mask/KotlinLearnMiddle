@@ -6,21 +6,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.badmask_zly.kotlinlearnmiddle.adapter.ForecastListAdapter
 import com.badmask_zly.kotlinlearnmiddle.domain.commands.RequestForecastCommand
+import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast
 import org.jetbrains.anko.async
 import org.jetbrains.anko.find
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
-
-    private val items = listOf(
-            "Mon 6/23 - Sunny - 31/17",
-            "Mon 6/24 - Foggy - 21/8",
-            "Mon 6/25 - Cloudy - 22/17",
-            "Mon 6/26 - Rainy - 18/11",
-            "Mon 6/27 - Foggy - 21/10",
-            "Mon 6/28 - TRAPPED IN WEATHERASTATION - 23/18",
-            "Mon 6/29 - Sunny - 20/7"
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +24,17 @@ class MainActivity : AppCompatActivity() {
 
         async() {
             val result = RequestForecastCommand("BeiJing,CN").execute()
-            uiThread { forecastList.adapter = ForecastListAdapter(result) }
+            uiThread {
+                /**
+                 * 第二个参数采用的是对象表达式的写法，对象表达式是在使用他们的地方立即执行「及初始化」的
+                 */
+                forecastList.adapter = ForecastListAdapter(result, object : ForecastListAdapter.OnItemClickListener {
+                    override fun invoke(forecast: Forecast) {
+                        toast(forecast.data)
+                    }
+
+                })
+            }
         }
 
     }

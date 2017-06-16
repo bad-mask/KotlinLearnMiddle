@@ -1,21 +1,32 @@
 package com.badmask_zly.kotlinlearnmiddle.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.badmask_zly.kotlinlearnmiddle.R
+import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast
 import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList
+import com.badmask_zly.kotlinlearnmiddle.extensions.ctx
+import com.squareup.picasso.Picasso
+import org.jetbrains.anko.find
 
 /**
  * Created by badmask_zly on 2017/6/16.
  */
 
-class ForecastListAdapter(val weekForecast: ForecastList) :
+class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: OnItemClickListener) :
         RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(TextView(parent.context))
+        val view = LayoutInflater.from(parent.ctx).inflate(R.layout.item_forecast, parent, false)
+        return ViewHolder(view, itemClick)
     }
 
     override fun getItemCount() = weekForecast.size()
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //public inline fun <T, R> with(receiver: T, block: T.() -> R): R = receiver.block()
@@ -26,9 +37,49 @@ class ForecastListAdapter(val weekForecast: ForecastList) :
          * 当我们针对同一个对象做很多操作的时候这个非常有利于简化代码
          */
         with(weekForecast[position]) {
-            holder.textView.text = "$data - $descritpion - $high/$low "
+            holder.bindForecast(weekForecast[position])
         }
     }
 
-    class ViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
+    class ViewHolder(view: View, val itemClick: OnItemClickListener) : RecyclerView.ViewHolder(view) {
+        private val iconView: ImageView
+        private val dateView: TextView
+        private val descriptionView: TextView
+        private val maxTemperatureView: TextView
+        private val minTemperatureView: TextView
+
+        init {
+            iconView = view.find(R.id.icon)
+            dateView = view.find(R.id.date)
+            descriptionView = view.find(R.id.description)
+            maxTemperatureView = view.find(R.id.maxTemperature)
+            minTemperatureView = view.find(R.id.minTemperature)
+        }
+
+        fun bindForecast(forecast: Forecast) {
+            with(forecast) {
+                /**
+                 * 直接使用 parent.ctx 与 itemView.ctx 不会被编译成功。
+                 * Anko 提供了大量的扩展函数来让 Android 编程更简单。
+                 * 举个例子，activitys 、 fragments 以及其他包含了 ctx 这个属性，通过 ctx 这个属性来返回 context ，但是在 View 中缺少这个属性。
+                 */
+                Picasso.with(itemView.ctx).load(iconUrl).into(iconView)
+                dateView.text = data
+                descriptionView.text = descritpion
+                maxTemperatureView.text = "${high.toString()}"
+                minTemperatureView.text = "${low.toString()}"
+                itemView.setOnClickListener { itemClick(forecast) }
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        /**
+         * 当被调用时，invoke 方法可以被省略，所以我们使用它来简化
+         * listener 可以被以下两种方式调用：
+         *      itemClick.invoke(forecast)
+         *      itemClick(forecast)
+         */
+        operator fun invoke(forecast: Forecast)
+    }
 }
