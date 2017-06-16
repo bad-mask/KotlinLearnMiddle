@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.badmask_zly.kotlinlearnmiddle.adapter.ForecastListAdapter
+import com.badmask_zly.kotlinlearnmiddle.domain.commands.RequestForecastCommand
+import org.jetbrains.anko.async
+import org.jetbrains.anko.find
+import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +25,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val forecastList = findViewById(R.id.forecase_list) as RecyclerView
+        //  使用 Anko 来简化一些代码
+        val forecastList: RecyclerView = find(R.id.forecase_list)
         forecastList.layoutManager = LinearLayoutManager(this)
-        forecastList.adapter = ForecastListAdapter(items)
+        // forecastList.adapter = ForecastListAdapter(items)
+
+        async() {
+            val result = RequestForecastCommand("BeiJing,CN").execute()
+            uiThread { forecastList.adapter = ForecastListAdapter(result) }
+        }
+
     }
+
 }
