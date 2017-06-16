@@ -17,7 +17,10 @@ import org.jetbrains.anko.find
  * Created by badmask_zly on 2017/6/16.
  */
 
-class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: OnItemClickListener) :
+/**
+ * Koltin 允许 Java 库的一些优化 ，Interface 中包含单个函数可以被替代为一个函数
+ */
+class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Forecast) -> Unit) :
         RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,7 +44,7 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: OnItemC
         }
     }
 
-    class ViewHolder(view: View, val itemClick: OnItemClickListener) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val itemClick: (Forecast) -> Unit) : RecyclerView.ViewHolder(view) {
         private val iconView: ImageView
         private val dateView: TextView
         private val descriptionView: TextView
@@ -73,13 +76,4 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: OnItemC
         }
     }
 
-    interface OnItemClickListener {
-        /**
-         * 当被调用时，invoke 方法可以被省略，所以我们使用它来简化
-         * listener 可以被以下两种方式调用：
-         *      itemClick.invoke(forecast)
-         *      itemClick(forecast)
-         */
-        operator fun invoke(forecast: Forecast)
-    }
 }

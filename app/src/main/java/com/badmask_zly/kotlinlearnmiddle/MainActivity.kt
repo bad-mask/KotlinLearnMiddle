@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.badmask_zly.kotlinlearnmiddle.adapter.ForecastListAdapter
 import com.badmask_zly.kotlinlearnmiddle.domain.commands.RequestForecastCommand
-import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast
 import org.jetbrains.anko.async
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
@@ -22,18 +21,13 @@ class MainActivity : AppCompatActivity() {
         forecastList.layoutManager = LinearLayoutManager(this)
         // forecastList.adapter = ForecastListAdapter(items)
 
-        async() {
+        async {
             val result = RequestForecastCommand("BeiJing,CN").execute()
             uiThread {
                 /**
-                 * 第二个参数采用的是对象表达式的写法，对象表达式是在使用他们的地方立即执行「及初始化」的
+                 * 如果 lambda 函数只接受一个参数，那我们可以使用 it 引用，而不用指定左边的参数
                  */
-                forecastList.adapter = ForecastListAdapter(result, object : ForecastListAdapter.OnItemClickListener {
-                    override fun invoke(forecast: Forecast) {
-                        toast(forecast.data)
-                    }
-
-                })
+                forecastList.adapter = ForecastListAdapter(result) { toast(it.data) }
             }
         }
 
