@@ -4,14 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.badmask_zly.kotlinlearnmiddle.R
 import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast
 import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList
 import com.badmask_zly.kotlinlearnmiddle.extensions.ctx
 import com.squareup.picasso.Picasso
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.item_forecast.view.*
 
 /**
  * Created by badmask_zly on 2017/6/16.
@@ -45,19 +43,6 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Foreca
     }
 
     class ViewHolder(view: View, val itemClick: (Forecast) -> Unit) : RecyclerView.ViewHolder(view) {
-        private val iconView: ImageView
-        private val dateView: TextView
-        private val descriptionView: TextView
-        private val maxTemperatureView: TextView
-        private val minTemperatureView: TextView
-
-        init {
-            iconView = view.find(R.id.icon)
-            dateView = view.find(R.id.date)
-            descriptionView = view.find(R.id.description)
-            maxTemperatureView = view.find(R.id.maxTemperature)
-            minTemperatureView = view.find(R.id.minTemperature)
-        }
 
         fun bindForecast(forecast: Forecast) {
             with(forecast) {
@@ -66,11 +51,11 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Foreca
                  * Anko 提供了大量的扩展函数来让 Android 编程更简单。
                  * 举个例子，activitys 、 fragments 以及其他包含了 ctx 这个属性，通过 ctx 这个属性来返回 context ，但是在 View 中缺少这个属性。
                  */
-                Picasso.with(itemView.ctx).load(iconUrl).into(iconView)
-                dateView.text = data
-                descriptionView.text = descritpion
-                maxTemperatureView.text = "${high.toString()}"
-                minTemperatureView.text = "${low.toString()}"
+                Picasso.with(itemView.ctx).load(iconUrl).into(itemView.icon)
+                itemView.date.text = data
+                itemView.description.text = descritpion
+                itemView.maxTemperature.text = "${high.toString()}"
+                itemView.minTemperature.text = "${low.toString()}"
                 itemView.setOnClickListener { itemClick(forecast) }
             }
         }
