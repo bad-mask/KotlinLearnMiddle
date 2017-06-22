@@ -23,11 +23,14 @@ fun <T : Any> SelectQueryBuilder.parseOpt(parser: (Map<String, Any?>) -> T): T? 
         })
 
 
+fun SelectQueryBuilder.byId(id: Long): SelectQueryBuilder = whereSimple("_id = ?", id.toString())
+
+
 /**
  * 创建一个 SQLiteDatabase 的扩展函数来让我们可以像 SQL 查询一样来执行他。
  */
 
-fun SQLiteDatabase.clear(tableName : String){
+fun SQLiteDatabase.clear(tableName: String) {
     execSQL("delete from $tableName")
 
 }

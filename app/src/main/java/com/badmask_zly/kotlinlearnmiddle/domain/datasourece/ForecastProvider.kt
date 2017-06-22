@@ -2,6 +2,7 @@ package com.badmask_zly.kotlinlearnmiddle.domain.datasourece
 
 import com.badmask_zly.kotlinlearnmiddle.data.db.ForecastDb
 import com.badmask_zly.kotlinlearnmiddle.data.server.ForecastServer
+import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast2
 import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList2
 import com.badmask_zly.kotlinlearnmiddle.extensions.firstResult
 
@@ -24,9 +25,16 @@ class ForecastProvider(val sources: List<ForecastDataSource> = ForecastProvider.
         return if (res != null && res.size >= days) res else null
     }
 
+    fun requestForecast(id: Long): Forecast2 = requestToSources {
+        it.requestDayForecast(id)
+    }
+
     /**
      * 计算今天毫秒级的时间
      */
     private fun todayTimeSpan() = System.currentTimeMillis() / DAY_IN_MILLIS * DAY_IN_MILLIS
+
+
+    private fun <T : Any> requestToSources(f: (ForecastDataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

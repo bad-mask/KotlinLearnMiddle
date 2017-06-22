@@ -10,7 +10,7 @@ import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast2 as ModelForecast
 /**
  * Created by badmask_zly on 2017/6/22.
  */
-class ServerDatamapper {
+class ServerDataMapper {
 
     fun convertToDomain(zipCode: Long, forecast: ForecastResult) = with(forecast) {
         ForecastList2(zipCode, city.name, city.country, convertForecastListToDomain(list))

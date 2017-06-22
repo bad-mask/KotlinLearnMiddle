@@ -1,11 +1,9 @@
 package com.badmask_zly.kotlinlearnmiddle.data.db
 
 import com.badmask_zly.kotlinlearnmiddle.domain.datasourece.ForecastDataSource
+import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast2
 import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList2
-import com.badmask_zly.kotlinlearnmiddle.extensions.clear
-import com.badmask_zly.kotlinlearnmiddle.extensions.parseList
-import com.badmask_zly.kotlinlearnmiddle.extensions.parseOpt
-import com.badmask_zly.kotlinlearnmiddle.extensions.toVarargArray
+import com.badmask_zly.kotlinlearnmiddle.extensions.*
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 import java.util.HashMap
@@ -17,7 +15,12 @@ import java.util.HashMap
  * 作用：保存数据到数据库，从数据库中查询数据
  */
 class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
-                 val dataMapper: DbDataMapper = DbDataMapper()) :ForecastDataSource{
+                 val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
+
+    override fun requestDayForecast(id: Long): Forecast2? = forecastDbHelper.use {
+        val forecast = select(DayForecastTable.NAME).byId(id).parseOpt { DayForecast(HashMap(it)) }
+        if (forecast != null ) dataMapper.convertDayToDomain(forecast) else null
+    }
 
     /**
      * 使用 use 函数返回的结果作为这个函数返回的结果
