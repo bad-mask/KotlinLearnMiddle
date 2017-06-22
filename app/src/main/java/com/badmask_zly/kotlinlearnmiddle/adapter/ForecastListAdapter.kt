@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.badmask_zly.kotlinlearnmiddle.R
 import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast
+import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast2
 import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList
+import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList2
 import com.badmask_zly.kotlinlearnmiddle.extensions.ctx
+import com.badmask_zly.kotlinlearnmiddle.extensions.toDateString
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_forecast.view.*
 
@@ -18,7 +21,7 @@ import kotlinx.android.synthetic.main.item_forecast.view.*
 /**
  * Koltin 允许 Java 库的一些优化 ，Interface 中包含单个函数可以被替代为一个函数
  */
-class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Forecast) -> Unit) :
+class ForecastListAdapter(val weekForecast: ForecastList2, val itemClick: (Forecast2) -> Unit) :
         RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +29,7 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Foreca
         return ViewHolder(view, itemClick)
     }
 
-    override fun getItemCount() = weekForecast.size()
+    override fun getItemCount() = weekForecast.size
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -38,13 +41,13 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Foreca
          * 当我们针对同一个对象做很多操作的时候这个非常有利于简化代码
          */
         with(weekForecast[position]) {
-            holder.bindForecast(weekForecast[position])
+            holder.bindForecast(weekForecast.get(position))
         }
     }
 
-    class ViewHolder(view: View, val itemClick: (Forecast) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val itemClick: (Forecast2) -> Unit) : RecyclerView.ViewHolder(view) {
 
-        fun bindForecast(forecast: Forecast) {
+        fun bindForecast(forecast: Forecast2) {
             with(forecast) {
                 /**
                  * 直接使用 parent.ctx 与 itemView.ctx 不会被编译成功。
@@ -52,8 +55,8 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Foreca
                  * 举个例子，activitys 、 fragments 以及其他包含了 ctx 这个属性，通过 ctx 这个属性来返回 context ，但是在 View 中缺少这个属性。
                  */
                 Picasso.with(itemView.ctx).load(iconUrl).into(itemView.icon)
-                itemView.date.text = data
-                itemView.description.text = descritpion
+                itemView.date.text = date.toDateString()
+                itemView.description.text = description
                 itemView.maxTemperature.text = "${high.toString()}"
                 itemView.minTemperature.text = "${low.toString()}"
                 itemView.setOnClickListener { itemClick(forecast) }

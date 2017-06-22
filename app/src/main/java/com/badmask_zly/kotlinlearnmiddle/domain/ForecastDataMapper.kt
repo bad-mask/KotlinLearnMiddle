@@ -10,7 +10,7 @@ import com.badmask_zly.kotlinlearnmiddle.domain.model.Forecast as ModelForecast
 /**
  * Created by badmask_zly on 2017/6/16.
  */
-public class ForecastDataMapper {
+class ForecastDataMapper {
 
     fun convertFromDataModel(forecast: ForecastResult): ForecastList {
         return ForecastList(forecast.city.name, forecast.city.country, convertForecastListToDomain(forecast.list))
