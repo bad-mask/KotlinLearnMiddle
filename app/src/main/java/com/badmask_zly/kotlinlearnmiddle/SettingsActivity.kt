@@ -14,7 +14,7 @@ class SettingsActivity : AppCompatActivity() {
         val DEFAULT_ZIP = 2038349
     }
 
-    var zipCode: Int by DelegatesExt.longPreference(this, ZIP_CODE, DEFAULT_ZIP)
+    var zipCode: Int by DelegatesExt.preference(this, ZIP_CODE, DEFAULT_ZIP)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
