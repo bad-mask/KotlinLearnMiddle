@@ -35,7 +35,7 @@ class DetailActivity : AppCompatActivity(), ToolbarManager {
         enableHomeAsUp { onBackPressed() }
 
         doAsync {
-            val result = RequestDayForecastCommand(intent.getLongExtra(ID, -1)).execute()
+            val result = RequestDayForecastCommand(intent.getIntExtra(ID, -1)).execute()
             uiThread { bindForecast(result) }
         }
     }

@@ -8,7 +8,7 @@ import java.net.URL
 /**
  * Created by badmask_zly on 2017/6/22.
  */
-class ForecastByZipCodeRequest(val zipCode: Long, val gson: Gson = Gson()) {
+class ForecastByZipCodeRequest(val zipCode: Int, val gson: Gson = Gson()) {
 
     companion object {
         private val APP_ID = "a6584c8f1f35a3c0fdcd334784feea2c"

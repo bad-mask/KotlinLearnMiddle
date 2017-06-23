@@ -23,7 +23,7 @@ fun <T : Any> SelectQueryBuilder.parseOpt(parser: (Map<String, Any?>) -> T): T? 
         })
 
 
-fun SelectQueryBuilder.byId(id: Long): SelectQueryBuilder = whereSimple("_id = ?", id.toString())
+fun SelectQueryBuilder.byId(id: Int): SelectQueryBuilder = whereSimple("_id = ?", id.toString())
 
 
 /**

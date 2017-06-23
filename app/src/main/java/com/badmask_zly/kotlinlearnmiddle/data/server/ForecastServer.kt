@@ -12,9 +12,9 @@ import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList2
 class ForecastServer(val dataMapper: ServerDataMapper = ServerDataMapper(),
                      val forecastDb: ForecastDb = ForecastDb()) : ForecastDataSource {
 
-    override fun requestDayForecast(id: Long): Forecast2? = throw UnsupportedOperationException()
+    override fun requestDayForecast(id: Int): Forecast2? = throw UnsupportedOperationException()
 
-    override fun requestForecastByZipCode(zipCode: Long, date: Long): ForecastList2? {
+    override fun requestForecastByZipCode(zipCode: Int, date: Long): ForecastList2? {
         val result = ForecastByZipCodeRequest(zipCode).execute()
         val converted = dataMapper.convertToDomain(zipCode, result)
         forecastDb.saveForecast(converted)

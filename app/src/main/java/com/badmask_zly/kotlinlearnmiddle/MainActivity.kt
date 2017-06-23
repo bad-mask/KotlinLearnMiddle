@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import com.badmask_zly.kotlinlearnmiddle.adapter.ForecastListAdapter
 import com.badmask_zly.kotlinlearnmiddle.domain.commands.RequestForecastCommand2
+import com.badmask_zly.kotlinlearnmiddle.extensions.DelegatesExt
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
@@ -14,6 +15,8 @@ import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), ToolbarManager {
+
+    val zipCode: Int by DelegatesExt.longPreference(this, SettingsActivity.ZIP_CODE, SettingsActivity.DEFAULT_ZIP)
 
     override val toolbar by lazy { find<Toolbar>(R.id.toolbar) }
 
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
     }
 
     private fun loadForecast() = doAsync {
-        val result = RequestForecastCommand2(1816670).execute()
+        val result = RequestForecastCommand2(zipCode).execute()
         uiThread {
             /**
              * 如果 lambda 函数只接受一个参数，那我们可以使用 it 引用，而不用指定左边的参数
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
                 startActivity<DetailActivity>(DetailActivity.ID to it.id
                         , DetailActivity.CITY_NAME to result.city)
             }
+            toolbarTitle = "${result.city} (${result.country})"
         }
 
     }

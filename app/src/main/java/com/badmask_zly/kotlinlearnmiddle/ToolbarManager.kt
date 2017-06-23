@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar
 import com.badmask_zly.kotlinlearnmiddle.extensions.ctx
 import com.badmask_zly.kotlinlearnmiddle.extensions.slideEnter
 import com.badmask_zly.kotlinlearnmiddle.extensions.slideExit
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -38,7 +39,7 @@ interface ToolbarManager {
         toolbar.inflateMenu(R.menu.menu_main)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_settings -> App.instance.toast("Settings")
+                R.id.action_settings -> toolbar.ctx.startActivity<SettingsActivity>()
                 else -> App.instance.toast("Unknown option")
             }
             true
@@ -46,13 +47,13 @@ interface ToolbarManager {
     }
 
     fun enableHomeAsUp(up: () -> Unit) {
-        toolbar.navigationIcon = createUpDraeable()
+        toolbar.navigationIcon = createUpDrawable()
         toolbar.setNavigationOnClickListener { up() }
     }
 
-    private fun createUpDraeable() = with(DrawerArrowDrawable(toolbar.ctx)) {
+    // 用 apply 来代替 with 与 this
+    private fun createUpDrawable() = DrawerArrowDrawable(toolbar.ctx).apply {
         progress = 1f
-        this
     }
 
     fun attachToScroll(recyclerView: RecyclerView) {

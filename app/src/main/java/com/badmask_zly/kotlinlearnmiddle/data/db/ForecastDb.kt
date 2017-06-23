@@ -17,7 +17,7 @@ import java.util.HashMap
 class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
                  val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
 
-    override fun requestDayForecast(id: Long): Forecast2? = forecastDbHelper.use {
+    override fun requestDayForecast(id: Int): Forecast2? = forecastDbHelper.use {
         val forecast = select(DayForecastTable.NAME).byId(id).parseOpt { DayForecast(HashMap(it)) }
         forecast?.let { dataMapper.convertDayToDomain(it) }
     }
@@ -25,7 +25,7 @@ class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.insta
     /**
      * 使用 use 函数返回的结果作为这个函数返回的结果
      */
-    override fun requestForecastByZipCode(zipCode: Long, date: Long) = forecastDbHelper.use {
+    override fun requestForecastByZipCode(zipCode: Int, date: Long) = forecastDbHelper.use {
 
         val dailyRequest = "${DayForecastTable.CITY_ID} = ? AND ${DayForecastTable.DATE} >= ?"
         val dailyForecast = select(DayForecastTable.NAME).whereSimple(dailyRequest, zipCode.toString(), date.toString())

@@ -16,16 +16,16 @@ class ForecastProvider(val sources: List<ForecastDataSource> = ForecastProvider.
         val SOURCES = listOf(ForecastDb(), ForecastServer())
     }
 
-    fun requestByZipCode(zipCode: Long, days: Int): ForecastList2 = sources.firstResult {
+    fun requestByZipCode(zipCode: Int, days: Int): ForecastList2 = sources.firstResult {
         requestSource(it, days, zipCode)
     }
 
-    private fun requestSource(source: ForecastDataSource, days: Int, zipCode: Long): ForecastList2? {
+    private fun requestSource(source: ForecastDataSource, days: Int, zipCode: Int): ForecastList2? {
         val res = source.requestForecastByZipCode(zipCode, todayTimeSpan())
         return if (res != null && res.size >= days) res else null
     }
 
-    fun requestForecast(id: Long): Forecast2 = requestToSources {
+    fun requestForecast(id: Int): Forecast2 = requestToSources {
         it.requestDayForecast(id)
     }
 

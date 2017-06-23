@@ -1,5 +1,6 @@
 package com.badmask_zly.kotlinlearnmiddle.extensions
 
+import android.content.Context
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -12,6 +13,8 @@ import kotlin.reflect.KProperty
  */
 object DelegatesExt {
     fun <T> notNullSingleValue(): ReadWriteProperty<Any?, T> = NotNullSingleValueVar()
+
+    fun longPreference(context: Context, name: String, default: Int) = LongPreference(context, name, default)
 }
 
 
@@ -32,3 +35,60 @@ private class NotNullSingleValueVar<T>() : ReadWriteProperty<Any?, T> {
     }
 
 }
+
+/**
+ * 创建一个 Long 属性的委托
+ */
+class LongPreference(val context: Context, val name: String, val default: Int) : ReadWriteProperty<Any?, Int> {
+
+    val prefs by lazy {
+        context.getSharedPreferences("default", Context.MODE_PRIVATE)
+    }
+
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
+        return prefs.getInt(name, default)
+    }
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
+        prefs.edit().putInt(name, value).apply()
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

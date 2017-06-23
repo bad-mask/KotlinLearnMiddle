@@ -7,6 +7,6 @@ import com.badmask_zly.kotlinlearnmiddle.domain.model.ForecastList2
  * Created by badmask_zly on 2017/6/20.
  */
 interface ForecastDataSource {
-    fun requestForecastByZipCode(zipCode: Long, date: Long): ForecastList2?
-    fun requestDayForecast(id: Long): Forecast2?
+    fun requestForecastByZipCode(zipCode: Int, date: Long): ForecastList2?
+    fun requestDayForecast(id: Int): Forecast2?
 }
