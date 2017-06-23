@@ -22,11 +22,13 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
         setContentView(R.layout.activity_main)
 
         initToolbar()
-        toolbarTitle=getString(R.string.mainstring)
-        toolbar.subtitle=getString(R.string.mainstring_second)
+        toolbarTitle = getString(R.string.mainstring)
+        toolbar.subtitle = getString(R.string.mainstring_second)
 
         //  使用 Koltin Android Extensions 来修改我们的代码
         forecastList.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager
+
+        attachToScroll(forecastList)
     }
 
     override fun onResume() {
